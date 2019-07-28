@@ -1,0 +1,53 @@
+extension "ldpl_net_server.cpp"
+
+data:
+    LDPL_NET_MSG is external text
+    LDPL_NET_IP is external text
+    LDPL_NET_PORT is external number
+    LDPL_NET_SN is external number #SN is "Socket Number"
+
+    ldpl.net.msg is text
+    ldpl.net.ip is text
+    ldpl.net.port is number
+    ldpl.net.sn is number #SN is "Socket Number"
+procedure:
+
+external sub LDPL_NET_CLIENT_CONNECTED
+    store LDPL_NET_SN in ldpl.net.sn
+    store LDPL_NET_IP in ldpl.net.ip
+    store LDPL_NET_PORT in ldpl.net.port
+    call net_new_client with ldpl.net.sn ldpl.net.ip ldpl.net.port
+end sub
+
+external sub LDPL_NET_CLIENT_DISCONNECTED
+    store LDPL_NET_SN in ldpl.net.sn
+    store LDPL_NET_IP in ldpl.net.ip
+    store LDPL_NET_PORT in ldpl.net.port
+    call net_client_left with ldpl.net.sn ldpl.net.ip ldpl.net.port
+end sub
+
+external sub LDPL_NET_ONMESSAGE
+    store LDPL_NET_SN in ldpl.net.sn
+    store LDPL_NET_MSG in ldpl.net.msg
+    call net_new_message with ldpl.net.sn ldpl.net.msg
+end sub
+
+sub ldpl.net.start
+    parameters:
+        port is number
+    procedure:
+        store port in LDPL_NET_PORT
+        call external LDPL_NET_STARTSERVER
+end sub
+create statement "NET LISTEN ON $" executing ldpl.net.start
+
+sub ldpl.net.send
+    parameters:
+        message is text
+        socket_dest is number
+    procedure:
+        store message in LDPL_NET_MSG
+        store socket_dest in LDPL_NET_SN
+        call external LDPL_NET_SENDMESSAGE
+end sub
+create statement "NET SEND $ TO $" executing ldpl.net.send
