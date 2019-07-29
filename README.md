@@ -21,9 +21,11 @@ This library adds two new statements to the language:
    you've written all our code and set up the whole library, as this is a locking
    statement and anything after it won't be executed (because your server will be too
    busy listening for new data and connections).
-- `NET SEND <text> TO <socket number>`.
+- `NET SEND <text> TO <socket number>`
    - Use this statement send the message `<text>` to the client identified by the
    socket number `<socket number>`. The client will receive your message, easy as pie.
+- `NET KICK CLIENT <socket number>`
+   - Use this statement to disconnect the client identified by the socket number `<socket number>`.
    
 In order to work, the library requires you to declare three sub-procedures:
 
