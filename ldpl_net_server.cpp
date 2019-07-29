@@ -24,6 +24,8 @@
 
 using namespace std;
 
+int client_socket[MAXCLIENTS];
+
 string LDPL_NET_MSG;
 string LDPL_NET_IP;
 double LDPL_NET_PORT = 8080;
@@ -58,6 +60,16 @@ void LDPL_NET_SENDMESSAGE(){
 	send_message(LDPL_NET_SN, LDPL_NET_MSG);
 }
 
+void LDPL_DISCONNECT_CLIENT(){
+	close(LDPL_NET_SN);
+	for (int i = 0; i < MAXCLIENTS; i++) 
+	{
+		if (client_socket[i] == LDPL_NET_SN){
+			client_socket[i] = 0;
+		}
+	}
+}
+
 void client_onmessage(unsigned int socket_number, string message){
 	LDPL_NET_SN = socket_number;
 	LDPL_NET_MSG = message;
@@ -67,7 +79,7 @@ void client_onmessage(unsigned int socket_number, string message){
 void LDPL_NET_STARTSERVER() 
 { 
 	int opt = TRUE; 
-	int master_socket , addrlen , new_socket , client_socket[MAXCLIENTS] , 
+	int master_socket , addrlen , new_socket , 
 		max_clients = MAXCLIENTS , activity, i , valread , sd; 
 	int max_sd; 
 	struct sockaddr_in address; 

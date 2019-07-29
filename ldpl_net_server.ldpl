@@ -51,3 +51,12 @@ sub ldpl.net.send
         call external LDPL_NET_SENDMESSAGE
 end sub
 create statement "NET SEND $ TO $" executing ldpl.net.send
+
+sub ldpl.net.disconnect_client
+    parameters:
+        socket_dest is number
+    procedure:
+        store socket_dest in LDPL_NET_SN
+        call external LDPL_DISCONNECT_CLIENT
+end sub
+create statement "NET KICK CLIENT $" executing ldpl.net.disconnect_client
