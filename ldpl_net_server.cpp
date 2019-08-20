@@ -68,7 +68,11 @@ void LDPL_NET_SENDMESSAGE(){
 }
 
 void LDPL_DISCONNECT_CLIENT(){
+	#ifdef _WIN32
+	closesocket(LDPL_NET_SN);
+	#else
 	close(LDPL_NET_SN);
+	#endif
 	for (int i = 0; i < MAXCLIENTS; i++) 
 	{
 		if (client_socket[i] == LDPL_NET_SN){
