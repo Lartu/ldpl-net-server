@@ -13,7 +13,9 @@
 #include <arpa/inet.h> //close
 #include <sys/socket.h>
 #include <netinet/in.h>
+#pragma comment (lib, "Ws2_32.lib")
 #else
+#include <windows.h>
 #include <Winsock2.h>
 #include <ws2tcpip.h>
 #endif
@@ -100,21 +102,47 @@ void LDPL_NET_STARTSERVER()
 	{ 
 		client_socket[i] = 0; 
 	} 
+
+	#ifdef _WIN32
+	WSADATA wsaData;
+	int iResult;
+	struct addrinfo *result = NULL, *ptr = NULL, hints;
+	iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (iResult != 0) {
+        printf("WSAStartup failed with error: %d\n", iResult);
+        exit(EXIT_FAILURE); 
+    }
+	ZeroMemory( &hints, sizeof(hints) );
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+	iResult = getaddrinfo(NULL, to_string(int(LDPL_NET_PORT)).c_str(), &hints, &result);
+    if ( iResult != 0 ) {
+        printf("getaddrinfo failed with error: %d\n", iResult);
+        WSACleanup();
+        exit(EXIT_FAILURE); 
+    }
+	#endif
 		
 	//create a master socket 
-	if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0) 
+	if((master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0) 
 	{ 
-		perror("socket failed"); 
+		perror("socket failed");
+		#ifdef _WIN32
+        WSACleanup();
+		#endif
 		exit(EXIT_FAILURE); 
 	} 
-	
-	//set master socket to allow multiple connections , 
-	//this is just a good habit, it will work without this 
+
+	#ifndef _WIN32
+	//set master socket to allow multiple connections, 
+	//this is just a good habit, it will work without this
 	if(setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 ) 
 	{ 
 		perror("setsockopt"); 
 		exit(EXIT_FAILURE); 
-	} 
+	}
+	#endif
 	
 	//type of socket created 
 	address.sin_family = AF_INET; 
@@ -122,17 +150,24 @@ void LDPL_NET_STARTSERVER()
 	address.sin_port = htons( (uint16_t) LDPL_NET_PORT ); 
 		
 	//bind the socket to localhost port LDPL_NET_PORT 
-	if (bind(master_socket, (struct sockaddr *)&address, sizeof(address))<0) 
+	iResult = bind(master_socket, (struct sockaddr *) &address, sizeof(address));
+	if (iResult < 0)
 	{ 
-		perror("bind failed"); 
+		perror("bind failed");
+		#ifdef _WIN32
+        WSACleanup();
+		#endif
 		exit(EXIT_FAILURE); 
 	} 
 	//printf("Listener on port %d \n", PORT); 
 		
-	//try to specify maximum of 3 pending connections for the master socket 
-	if (listen(master_socket, 3) < 0) 
+	//try to specify maximum of 16 pending connections for the master socket 
+	if (listen(master_socket, 16) < 0) 
 	{ 
 		perror("listen"); 
+		#ifdef _WIN32
+        WSACleanup();
+		#endif
 		exit(EXIT_FAILURE); 
 	} 
 		
@@ -177,10 +212,17 @@ void LDPL_NET_STARTSERVER()
 		//then its an incoming connection 
 		if (FD_ISSET(master_socket, &readfds)) 
 		{ 
-			if ((new_socket = accept(master_socket, 
-					(struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
+			#ifdef _WIN32
+			new_socket = accept(master_socket, NULL, NULL);
+			#else
+			new_socket = accept(master_socket, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+			#endif
+			if (new_socket < 0) 
 			{ 
 				perror("accept"); 
+				#ifdef _WIN32
+				WSACleanup();
+				#endif
 				exit(EXIT_FAILURE); 
 			} 
 			
@@ -205,11 +247,16 @@ void LDPL_NET_STARTSERVER()
 		{ 
 			sd = client_socket[i]; 
 				
-			if (FD_ISSET( sd , &readfds)) 
+			if (FD_ISSET(sd, &readfds)) 
 			{ 
 				//Check if it was for closing , and also read the 
 				//incoming message 
-				if ((valread = read( sd , buffer, 1024)) == 0) 
+				#ifdef _WIN32
+				valread = recv(sd, buffer, 1024, 0);
+				#else
+				valread = read(sd, buffer, 1024);
+				#endif
+				if (valread == 0) 
 				{ 
 					//Somebody disconnected , get his details and print 
 					getpeername(sd , (struct sockaddr*)&address , (socklen_t*)&addrlen); 
