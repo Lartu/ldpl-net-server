@@ -15,6 +15,14 @@ and *ldpl_net_server.ldpl* to your project directory and then adding the line:
 before the `DATA` and `PROCEDURE` sections of your main project file. The library is
 ready to be used.
 
+**Windows** users should also add the following lines before the `DATA` and `PROCEDURE` 
+sections:
+
+```
+FLAG "-lwsock32 "
+FLAG "-lws2_32"
+```
+
 This library adds two new statements to the language:
 - `NET LISTEN ON <number>`
    - Use this statement to start your server on port number `<number>`. Do this after

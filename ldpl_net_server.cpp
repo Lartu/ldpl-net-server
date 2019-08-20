@@ -9,10 +9,15 @@
 #include <stdlib.h> 
 #include <errno.h> 
 #include <unistd.h> //close 
-#include <arpa/inet.h> //close 
-#include <sys/types.h> 
-#include <sys/socket.h> 
-#include <netinet/in.h> 
+#ifndef _WIN32
+#include <arpa/inet.h> //close
+#include <sys/socket.h>
+#include <netinet/in.h>
+#else
+#include <Winsock2.h>
+#include <ws2tcpip.h>
+#endif
+#include <sys/types.h>  
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros 
 #include <string>
 #include <iostream>
