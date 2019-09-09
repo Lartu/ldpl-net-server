@@ -19,7 +19,7 @@ ready to be used.
 sections:
 
 ```
-FLAG "-lwsock32 "
+FLAG "-lwsock32"
 FLAG "-lws2_32"
 ```
 
