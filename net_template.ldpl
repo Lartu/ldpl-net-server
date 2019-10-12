@@ -1,4 +1,4 @@
-include "ldpl_net_server.ldpl"
+include "ldpl_net_server/ldpl_net_server.ldpl"
 
 procedure:
 

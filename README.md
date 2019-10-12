@@ -3,19 +3,20 @@
 The **LDPL Network Server Library** is an library for creating socket based servers in
 [**LDPL**](https://www.github.com/lartu/ldpl). It aims to make it very easy to develop,
 test and deploy network servers, with as little work as possible. This library requires
-**LDPL 4.0** or greater.
+**LDPL 4.3** or greater.
 
-## Usage
+## Installation
 
-Include the library into your LDPL project by copying the files *ldpl_net_server.cpp*
-and *ldpl_net_server.ldpl* to your project directory and then adding the line:
+Include the library into your LDPL project by copying the folder *ldpl_net_server* to your project directory and then adding the line:
 
-`INCLUDE "ldpl_net_server.ldpl"`
+`INCLUDE "ldpl_net_server/ldpl_net_server.ldpl"`
 
 before the `DATA` and `PROCEDURE` sections of your main project file. The library is
 ready to be used.
 
-This library adds two new statements to the language:
+## Usage
+
+This library adds three new statements to the language:
 - `NET LISTEN ON <number>`
    - Use this statement to start your server on port number `<number>`. Do this after
    you've written all our code and set up the whole library, as this is a locking

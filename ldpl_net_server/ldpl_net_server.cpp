@@ -23,6 +23,7 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros 
 #include <string>
 #include <iostream>
+#include "ldpl-types.h"
 
 #define TRUE 1 
 #define FALSE 0 
@@ -33,10 +34,10 @@ using namespace std;
 
 int client_socket[MAXCLIENTS];
 
-string LDPL_NET_MSG;
-string LDPL_NET_IP;
-double LDPL_NET_PORT = 8080;
-double LDPL_NET_SN;
+ldpl_text LDPL_NET_MSG;
+ldpl_text LDPL_NET_IP;
+ldpl_number LDPL_NET_PORT = 8080;
+ldpl_number LDPL_NET_SN;
 
 void LDPL_NET_CLIENT_CONNECTED();
 void LDPL_NET_CLIENT_DISCONNECTED();
@@ -56,7 +57,7 @@ void client_disconnected(unsigned int socket_number, string ip, unsigned int por
     LDPL_NET_CLIENT_DISCONNECTED();
 }
 
-void send_message(unsigned int socket_number, string message){
+void send_message(unsigned int socket_number, const string message){
     if(send(socket_number, message.c_str(), strlen(message.c_str()), 0) != strlen(message.c_str()) ) 
     { 
         perror("send"); 
@@ -64,7 +65,7 @@ void send_message(unsigned int socket_number, string message){
 }
 
 void LDPL_NET_SENDMESSAGE(){
-	send_message(LDPL_NET_SN, LDPL_NET_MSG);
+	send_message(LDPL_NET_SN, LDPL_NET_MSG.str_rep());
 }
 
 void LDPL_DISCONNECT_CLIENT(){
@@ -107,9 +108,9 @@ void LDPL_NET_STARTSERVER()
 		client_socket[i] = 0; 
 	} 
 
+	int iResult;
 	#ifdef _WIN32
 	WSADATA wsaData;
-	int iResult;
 	struct addrinfo *result = NULL, *ptr = NULL, hints;
 	iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
     if (iResult != 0) {
@@ -154,7 +155,7 @@ void LDPL_NET_STARTSERVER()
 	address.sin_port = htons( (uint16_t) LDPL_NET_PORT ); 
 		
 	//bind the socket to localhost port LDPL_NET_PORT 
-	iResult = bind(master_socket, (struct sockaddr *) &address, sizeof(address));
+	iResult = ::bind(master_socket, (struct sockaddr *) &address, sizeof(address));
 	if (iResult < 0)
 	{ 
 		perror("bind failed");
