@@ -41,6 +41,21 @@ sub ldpl.net.start
 end sub
 create statement "NET LISTEN ON $" executing ldpl.net.start
 
+sub ldpl.net.startPoll
+    parameters:
+        port is number
+    procedure:
+        call external LDPL_NET_USEPOLLING
+        store port in LDPL_NET_PORT
+        call external LDPL_NET_STARTSERVER
+end sub
+create statement "NET START ON $" executing ldpl.net.startPoll
+
+sub ldpl.net.poll
+    call external LDPL_NET_POLL
+end sub
+create statement "NET POLL" executing ldpl.net.poll
+
 sub ldpl.net.send
     parameters:
         message is text

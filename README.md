@@ -16,12 +16,19 @@ ready to be used.
 
 ## Usage
 
-This library adds three new statements to the language:
+This library adds five new statements to the language:
 - `NET LISTEN ON <number>`
    - Use this statement to start your server on port number `<number>`. Do this after
    you've written all our code and set up the whole library, as this is a locking
    statement and anything after it won't be executed (because your server will be too
    busy listening for new data and connections).
+- `NET START ON <number>`
+   - Use this statement to start your server on port number `<number>` without blocking
+   the execution of your program. You will need to use `NET POLL` to listen for client
+   activity. When your program exits, the socket is closed.
+- `NET POLL`
+   - Use this statement to listen for client activity when your server has been started
+   using `NET START ON <number>`.
 - `NET SEND <text> TO <socket number>`
    - Use this statement send the message `<text>` to the client identified by the
    socket number `<socket number>`. The client will receive your message, easy as pie.
