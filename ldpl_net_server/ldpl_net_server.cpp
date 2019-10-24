@@ -276,8 +276,8 @@ void LDPL_NET_STARTSERVER()
 	} 
 	//printf("Listener on port %d \n", PORT); 
 		
-	//try to specify maximum of 16 pending connections for the master socket 
-	if (listen(master_socket, 16) < 0) 
+	//try to specify maximum of 256 pending connections for the master socket 
+	if (listen(master_socket, 256) < 0) 
 	{ 
 		perror("listen"); 
 		#ifdef _WIN32
