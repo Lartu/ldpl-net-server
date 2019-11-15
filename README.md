@@ -5,18 +5,26 @@ The **LDPL Network Server Library** is an library for creating socket based serv
 test and deploy network servers, with as little work as possible. This library requires
 **LDPL 4.3** or greater.
 
-## 🖼️ Example
-
-The [Lute](https://github.com/lartu/lute) text editor was written using this library.
-
-![Lute Screenshot](https://raw.githubusercontent.com/Lartu/lute/master/images/screenshot.png)
-
 ## 🧰 Installation
 
-Include the library into your LDPL project by copying the folder *ldpl-ncurses* to your project directory and then adding the line:
+You can install this library **by hand** or **using [LPM](https://github.com/Lartu/ldpl#-libraries)**.
+
+### 📦 Installing using LPM
+
+Open a terminal and write `lpm install ldpl_net_server`. Once downloaded, include it in your LDPL project by adding the line:
 
 ```coffeescript
-include "ldpl-ncurses/ldpl-ncurses.ldpl"
+using package ldpl_net_server
+```
+
+before the `data` and `procedure` sections of your source file. The library is ready to be used.
+
+### ✋🏻 Installing by hand
+
+Include the library into your LDPL project by copying the folder *ldpl_net_server* to your project directory and then adding the line:
+
+```coffeescript
+include "ldpl_net_server/ldpl_net_server.ldpl"
 ```
 
 before the `data` and `procedure` sections of your source file. The library is
