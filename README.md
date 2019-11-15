@@ -5,16 +5,32 @@ The **LDPL Network Server Library** is an library for creating socket based serv
 test and deploy network servers, with as little work as possible. This library requires
 **LDPL 4.3** or greater.
 
-## Installation
+## 🧰 Installation
+
+You can install this library **by hand** or **using [LPM](https://github.com/Lartu/ldpl#-libraries)**.
+
+### 📦 Installing using LPM
+
+Open a terminal and write `lpm install ldpl_net_server`. Once downloaded, include it in your LDPL project by adding the line:
+
+```coffeescript
+using package ldpl_net_server
+```
+
+before the `data` and `procedure` sections of your source file. The library is ready to be used.
+
+### ✋🏻 Installing by hand
 
 Include the library into your LDPL project by copying the folder *ldpl_net_server* to your project directory and then adding the line:
 
-`INCLUDE "ldpl_net_server/ldpl_net_server.ldpl"`
+```coffeescript
+include "ldpl_net_server/ldpl_net_server.ldpl"
+```
 
-before the `DATA` and `PROCEDURE` sections of your main project file. The library is
+before the `data` and `procedure` sections of your source file. The library is
 ready to be used.
 
-## Usage
+## 📚 Documentation
 
 This library adds five new statements to the language:
 - `NET LISTEN ON <number>`
@@ -88,11 +104,11 @@ sub net_new_message
 end sub
 ```
 
-## Template
+## :book: Template
 
 A simple template for a minimal echo server can be found in the *net_template.ldpl* file.
 Be sure to check it if you have any doubts about where to start writing your server.
 
-## License
+## :scroll: License
 
 This library is released under the MIT License.
