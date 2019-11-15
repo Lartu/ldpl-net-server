@@ -1,5 +1,9 @@
 ![The LDPL Network Server Library](images/ldpl-net-logo.png)
 
+![Version](https://img.shields.io/badge/version-1.1-brown.svg)
+![License](https://img.shields.io/badge/license-MIT-yellow)
+![Size](https://img.shields.io/github/languages/code-size/lartu/ldpl-net-server)
+
 The **LDPL Network Server Library** is an library for creating socket based servers in
 [**LDPL**](https://www.github.com/lartu/ldpl). It aims to make it very easy to develop,
 test and deploy network servers, with as little work as possible. This library requires
