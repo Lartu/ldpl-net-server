@@ -96,16 +96,12 @@ int opt = TRUE;
 int master_socket, addrlen, new_socket, max_clients = MAXCLIENTS, activity, i , valread, sd;
 int max_sd; 
 struct sockaddr_in address;
-struct timeval tv;
 
 void LDPL_NET_USEPOLLING(){
     polling = true;
 }
 
 void LDPL_NET_POLL(){
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-
 	//clear the socket set 
 	FD_ZERO(&readfds); 
 
@@ -130,7 +126,7 @@ void LDPL_NET_POLL(){
 
 	//wait for an activity on one of the sockets , timeout is NULL , 
 	//so wait indefinitely 
-	activity = select( max_sd + 1 , &readfds , NULL , NULL , &tv); 
+	activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL); 
 
 	if ((activity < 0) && (errno!=EINTR)) 
 	{ 
