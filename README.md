@@ -47,8 +47,10 @@ This library adds five new statements to the language:
    the execution of your program. You will need to use `NET POLL` to listen for client
    activity. When your program exits, the socket is closed.
 - `NET POLL`
-   - Use this statement to listen for client activity when your server has been started
-   using `NET START ON <number>`.
+   - Use this statement to listen for client activity when your server has been started 
+   using `NET START ON <number>`. By default the call is nonblocking and returns 
+   instantly if there is no activity, but you can set a timeout or wait forever using
+   `NET POLL FOR <number> SECONDS` or `NET POLL BLOCKING`.
 - `NET SEND <text> TO <socket number>`
    - Use this statement send the message `<text>` to the client identified by the
    socket number `<socket number>`. The client will receive your message, easy as pie.

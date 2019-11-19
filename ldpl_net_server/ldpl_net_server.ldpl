@@ -5,6 +5,7 @@ data:
     LDPL_NET_IP is external text
     LDPL_NET_PORT is external number
     LDPL_NET_SN is external number #SN is "Socket Number"
+    LDPL_NET_TIMEOUT is external number
 
     ldpl.net.msg is text
     ldpl.net.ip is text
@@ -52,9 +53,23 @@ end sub
 create statement "NET START ON $" executing ldpl.net.startPoll
 
 sub ldpl.net.poll
+parameters:
+    timeout is number
+procedure:
+    store timeout in LDPL_NET_TIMEOUT
     call external LDPL_NET_POLL
 end sub
-create statement "NET POLL" executing ldpl.net.poll
+create statement "NET POLL FOR $ SECONDS" executing ldpl.net.poll
+
+sub ldpl.net.poll-no-timeout
+    call ldpl.net.poll with 0
+end sub
+create statement "NET POLL" executing ldpl.net.poll-no-timeout
+
+sub ldpl.net.poll-blocking
+    call ldpl.net.poll with -1
+end sub
+create statement "NET POLL BLOCKING" executing ldpl.net.poll-blocking
 
 sub ldpl.net.send
     parameters:
