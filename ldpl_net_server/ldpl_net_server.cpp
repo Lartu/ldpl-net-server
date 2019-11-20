@@ -38,6 +38,7 @@ ldpl_text LDPL_NET_MSG;
 ldpl_text LDPL_NET_IP;
 ldpl_number LDPL_NET_PORT = 8080;
 ldpl_number LDPL_NET_SN;
+ldpl_number LDPL_NET_TIMEOUT;
 
 bool polling = false;
 
@@ -102,8 +103,16 @@ void LDPL_NET_USEPOLLING(){
     polling = true;
 }
 
+// This uses the value of LDPL_NET_TIMEOUT. There are three options:
+//    0   Nonblocking, 0s timeout. 
+//        Returns instantly, with or without socket activity.
+//   >0   Blocking, timeout in seconds. 
+//        Hangs for N seconds or until there is socket activity.
+//   -1   Blocking, infinite timeout. 
+//        Hangs until there is socket activity.
 void LDPL_NET_POLL(){
-    tv.tv_sec = 0;
+	bool use_timeout = LDPL_NET_TIMEOUT >= 0;
+	tv.tv_sec = LDPL_NET_TIMEOUT;
     tv.tv_usec = 0;
 
 	//clear the socket set 
@@ -128,9 +137,8 @@ void LDPL_NET_POLL(){
 			max_sd = sd; 
 	} 
 
-	//wait for an activity on one of the sockets , timeout is NULL , 
-	//so wait indefinitely 
-	activity = select( max_sd + 1 , &readfds , NULL , NULL , &tv); 
+	//wait for an activity on one of the sockets. if timeout is NULL, wait indefinitely.
+	activity = select( max_sd + 1 , &readfds , NULL , NULL , use_timeout ? &tv : NULL); 
 
 	if ((activity < 0) && (errno!=EINTR)) 
 	{ 
